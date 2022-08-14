@@ -8,14 +8,18 @@ use game_of_life::node::GameOfLifeNode;
 use game_of_life::pipeline::{GameOfLifePipeline, queue_bind_group};
 
 use crate::game_of_life;
+use crate::game_of_life::input::keyboard_input;
 
 pub struct GameOfLifeComputePlugin;
 
 #[derive(Clone, Deref, ExtractResource)]
 pub struct GameOfLifeImage(pub Handle<Image>);
 
+
+
 #[derive(Clone, ExtractResource)]
 pub struct GameOfLife {
+    pub is_paused: bool,
     pub size: Size<u32>,
 }
 
@@ -23,6 +27,7 @@ impl Plugin for GameOfLifeComputePlugin {
     fn build(&self, app: &mut App) {
         app
             .insert_resource(GameOfLife {
+                is_paused: true,
                 size: Size {
                     width: 1280,
                     height: 720,
@@ -30,7 +35,9 @@ impl Plugin for GameOfLifeComputePlugin {
             })
             .add_plugin(ExtractResourcePlugin::<GameOfLife>::default())
             .add_plugin(ExtractResourcePlugin::<GameOfLifeImage>::default())
-            .add_startup_system(setup_image);
+            .add_startup_system(setup_image)
+            .add_system(keyboard_input)
+        ;
 
         let render_app = app.sub_app_mut(RenderApp);
         render_app

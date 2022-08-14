@@ -28,7 +28,7 @@ fn init(@builtin(global_invocation_id) invocation_id: vec3<u32>, @builtin(num_wo
 }
 
 fn is_alive(location: vec2<i32>, offset_x: i32, offset_y: i32) -> u32 {
-    let value: vec4<f32> = textureLoad(texture, vec2<i32>(location.x + offset_x, location.x + offset_y));
+    let value: vec4<f32> = textureLoad(texture, vec2<i32>(location.x + offset_x, location.y + offset_y));
     return u32(value.x);
 }
 
